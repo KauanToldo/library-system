@@ -36,4 +36,53 @@ O trabalho deverá obrigatoriamente:
 - Compilar sem erros.
 
 ---
-**Bom trabalho a todos(as)!**
+
+## O que foi desenvolvido
+
+### Estrutura de arquivos
+
+```
+Sistema de Biblioteca/
+├── include/
+│   ├── livro.h       # Struct Livro e protótipos
+│   ├── lista.h       # Struct e funções da lista encadeada
+│   ├── pilha.h       # Struct e funções da pilha de histórico
+│   ├── sistema.h     # Funções de menu e interação
+│   └── cores.h       # Macros de cores ANSI
+├── src/
+│   ├── livro.c       # criar_livro, exibir_livro
+│   ├── lista.c       # Inserção, busca, listagem, remoção, empréstimo, devolução
+│   ├── pilha.c       # empilhar_operacao, exibir_historico, liberar_pilha
+│   ├── sistema.c     # Menu navegável, leitura de input, operações do usuário
+│   └── main.c        # Ponto de entrada e loop principal
+└── README.md
+```
+
+### Funcionalidades implementadas
+
+- **Cadastrar livro** — com validação de código duplicado, ano (entre 1 e o ano atual) e quantidade (não negativa)
+- **Remover livro** — busca por código e libera o nó com `free`
+- **Buscar livro** — busca por código e exibe os dados
+- **Listar livros** — exibe todo o catálogo em ordem de cadastro
+- **Emprestar livro** — decrementa `quantidade_disponivel`; bloqueia se não houver exemplares
+- **Devolver livro** — incrementa `quantidade_disponivel`; bloqueia se nenhum exemplar estiver emprestado
+- **Histórico de operações** — pilha LIFO com todas as ações realizadas, exibidas da mais recente para a mais antiga, com cores por tipo de operação
+
+### Destaques técnicos
+
+- Menu interativo navegável com setas do teclado ou W/S, seleção com Enter
+- Cores ANSI no terminal para erros, sucesso, prompts e histórico
+- Entradas inválidas repetem o campo sem encerrar o processo
+- `liberar_lista` e `liberar_pilha` garantem que não há memory leaks ao encerrar
+
+## Como compilar e executar
+
+**Compilar:**
+```bash
+gcc -Wall -Wextra -std=c11 -Iinclude src/main.c src/livro.c src/lista.c src/pilha.c src/sistema.c -o library_system.exe
+```
+
+**Executar:**
+```bash
+./library_system.exe
+```

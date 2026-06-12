@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "livro.h"
+#include "cores.h"
 
 /* Copia 'origem' para 'destino' respeitando o tamanho do buffer e
    garantindo o terminador nulo, mesmo quando a origem e maior. */
@@ -25,6 +26,7 @@ Livro criar_livro(int codigo, const char *titulo, const char *autor,
     copiar_texto(livro.titulo, titulo, TAM_TITULO);
     copiar_texto(livro.autor, autor, TAM_AUTOR);
     livro.ano_publicacao = ano_publicacao;
+    livro.quantidade_total = quantidade_disponivel;
     livro.quantidade_disponivel = quantidade_disponivel;
 
     return livro;
@@ -36,9 +38,9 @@ void exibir_livro(const Livro *livro)
         return;
     }
 
-    printf("Codigo: %d\n", livro->codigo);
-    printf("Titulo: %s\n", livro->titulo);
-    printf("Autor: %s\n", livro->autor);
-    printf("Ano de publicacao: %d\n", livro->ano_publicacao);
-    printf("Quantidade disponivel: %d\n", livro->quantidade_disponivel);
+    printf(COR_LABEL "  Codigo: " COR_VALOR "%d\n" COR_RESET, livro->codigo);
+    printf(COR_LABEL "  Titulo: " COR_VALOR "%s\n" COR_RESET, livro->titulo);
+    printf(COR_LABEL "  Autor:  " COR_VALOR "%s\n" COR_RESET, livro->autor);
+    printf(COR_LABEL "  Ano:    " COR_VALOR "%d\n" COR_RESET, livro->ano_publicacao);
+    printf(COR_LABEL "  Qtd.:   " COR_VALOR "%d\n" COR_RESET, livro->quantidade_disponivel);
 }

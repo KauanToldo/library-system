@@ -10,6 +10,7 @@ typedef struct {
     char titulo[TAM_TITULO];
     char autor[TAM_AUTOR];
     int ano_publicacao;
+    int quantidade_total;      /* imutavel: total cadastrado originalmente */
     int quantidade_disponivel;
 } Livro;
 

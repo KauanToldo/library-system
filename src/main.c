@@ -1,44 +1,31 @@
 #include <stdio.h>
 
-#include "livro.h"
 #include "lista.h"
 #include "pilha.h"
 #include "sistema.h"
+#include "cores.h"
 
-/* Semana 1: validacao da infraestrutura.
-   Inicializa a lista e a pilha, cadastra alguns livros, registra as
-   operacoes no historico e libera tudo antes de encerrar. O menu
-   interativo entra na Semana 3 do plano. */
-
-static void listar_catalogo(const ListaLivros *lista)
+static void exibir_catalogo(const ListaLivros *catalogo)
 {
-    NoLista *atual = lista->inicio;
+    exibir_cabecalho();
+    printf(COR_TITULO "  CATALOGO DE LIVROS\n\n" COR_RESET);
+    listar_livros(catalogo);
 
-    if (atual == NULL) {
-        printf("Catalogo vazio.\n");
-        return;
-    }
-
-    while (atual != NULL) {
-        exibir_livro(&atual->dados);
-        printf("----------------------------------------------\n");
-        atual = atual->proximo;
-    }
+    int c;
+    printf(COR_AVISO "\n  Pressione Enter para continuar..." COR_RESET);
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
-static void listar_historico(const PilhaHistorico *pilha)
+static void exibir_historico_formatado(const PilhaHistorico *historico)
 {
-    NoPilha *atual = pilha->topo;
+    exibir_cabecalho();
+    printf(COR_TITULO "  HISTORICO DE OPERACOES\n" COR_RESET);
+    printf(COR_BORDA  "  (mais recente primeiro)\n\n" COR_RESET);
+    exibir_historico(historico);
 
-    if (atual == NULL) {
-        printf("Nenhuma operacao registrada.\n");
-        return;
-    }
-
-    while (atual != NULL) {
-        printf("[%s] %s\n", atual->op.tipo_operacao, atual->op.descricao);
-        atual = atual->abaixo;
-    }
+    int c;
+    printf(COR_AVISO "\n  Pressione Enter para continuar..." COR_RESET);
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 int main(void)
@@ -49,24 +36,26 @@ int main(void)
     inicializar_lista(&catalogo);
     inicializar_pilha(&historico);
 
-    exibir_cabecalho();
+    int opcao;
+    do
+    {
+        opcao = exibir_menu();
 
-    inserir_livro(&catalogo, criar_livro(1, "O Hobbit", "J.R.R. Tolkien",
-                                         1937, 3));
-    empilhar_operacao(&historico, "Cadastro",
-                      "Livro 'O Hobbit' cadastrado com sucesso");
-
-    inserir_livro(&catalogo, criar_livro(2, "Dom Casmurro",
-                                         "Machado de Assis", 1899, 5));
-    empilhar_operacao(&historico, "Cadastro",
-                      "Livro 'Dom Casmurro' cadastrado com sucesso");
-
-    printf("\nCatalogo de livros:\n");
-    printf("----------------------------------------------\n");
-    listar_catalogo(&catalogo);
-
-    printf("\nHistorico de operacoes (mais recente primeiro):\n");
-    listar_historico(&historico);
+        switch (opcao)
+        {
+        case 1: menu_cadastrar(&catalogo, &historico);  break;
+        case 2: menu_remover(&catalogo, &historico);    break;
+        case 3: menu_buscar(&catalogo);                 break;
+        case 4: exibir_catalogo(&catalogo);             break;
+        case 5: menu_emprestar(&catalogo, &historico);  break;
+        case 6: menu_devolver(&catalogo, &historico);   break;
+        case 7: exibir_historico_formatado(&historico); break;
+        case 0:
+            exibir_cabecalho();
+            printf(COR_SUCESSO "  Encerrando o sistema. Ate logo!\n\n" COR_RESET);
+            break;
+        }
+    } while (opcao != 0);
 
     liberar_lista(&catalogo);
     liberar_pilha(&historico);
